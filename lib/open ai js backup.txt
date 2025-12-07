@@ -1,0 +1,29 @@
+// lib/openai.js
+import "dotenv/config"; // <-- this loads .env for any script that imports this
+
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+export default client;
+
+export async function createChatCompletion({ messages, model = "gpt-4.1" }) {
+  const response = await client.chat.completions.create({
+    model,
+    messages,
+  });
+  return response;
+}
+
+// Embeddings for RAG
+export async function createEmbedding({ input, model = "text-embedding-3-small" }) {
+  const response = await client.embeddings.create({
+    model,
+    input,
+  });
+
+  // response.data is an array; we pass single input each time
+  return response.data[0].embedding;
+}
