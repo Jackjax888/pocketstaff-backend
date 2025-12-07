@@ -3,6 +3,8 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
+import emailRoutes from "./routes/email.js";
+
 
 import messagesRouter from "./routes/messages.js";
 import conversationsRouter from "./routes/conversations.js";
@@ -25,6 +27,8 @@ app.use(express.json());
 app.use("/api", messagesRouter);
 app.use("/api", conversationsRouter);
 app.use("/api", assistantsRouter);
+app.use("/api", emailRoutes);
+
 
 // === Server ===
 const PORT = process.env.PORT || 4000;
