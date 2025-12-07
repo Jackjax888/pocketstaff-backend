@@ -23,6 +23,31 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Simple email send endpoint (no real email yet)
+app.post("/api/email/send", async (req, res) => {
+  try {
+    const { to, subject, body } = req.body || {};
+
+    if (!to || !subject || !body) {
+      return res.status(400).json({
+        error: "Missing required fields: to, subject, body",
+      });
+    }
+
+    console.log("[PocketStaff EMAIL SEND request]", { to, subject, body });
+
+    // TODO: plug in real Gmail / SMTP here
+    return res.json({
+      ok: true,
+      message: "Email send endpoint hit successfully (no real email sent yet).",
+    });
+  } catch (err) {
+    console.error("Error in /api/email/send:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 // === Routes ===
 app.use("/api", messagesRouter);
 app.use("/api", conversationsRouter);
