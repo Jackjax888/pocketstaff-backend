@@ -60,16 +60,35 @@ router.post("/conversations/:id/messages", async (req, res) => {
     }));
 
     // 4. Load the system prompt from your markdown
-    //    This assumes loadKB(assistantSlug, filename).
-    //    If your kbLoader is different, we can adjust this line later.
-    const systemPrompt = await loadKB(assistant.slug, "full_system_prompt.md");
+const systemPrompt = await loadKB(assistant.slug, "full_system_prompt.md");
+console.log(
+  "[KB DEBUG] assistantSlug:",
+  assistant.slug,
+  "| systemPrompt length:",
+  systemPrompt ? systemPrompt.length : "NULL"
+);
 
-    // 5. 🔍 Retrieve relevant KB chunks via RAG, based on the user's new message
-    const ragMatches = await retrieveAssistantContext({
-      assistantSlug: assistant.slug,
-      query: content,
-      matchCount: 8,
-    });
+// 5. 🔍 Retrieve relevant KB chunks via RAG, based on the user's new message
+const ragMatches = await retrieveAssistantContext({
+  assistantSlug: assistant.slug,
+  query: content,
+  matchCount: 8,
+});
+
+console.log(
+  "[RAG DEBUG] assistantSlug:",
+  assistant.slug,
+  "| ragMatches count:",
+  ragMatches ? ragMatches.length : 0
+);
+
+if (ragMatches && ragMatches[0]) {
+  console.log(
+    "[RAG DEBUG] first match source_path:",
+    ragMatches[0].source_path
+  );
+}
+
 
     const ragContext =
       ragMatches.length > 0
