@@ -4,6 +4,9 @@
 This file defines the complete behavior of the Secretary assistant at runtime.  
 It is written to be loaded by the backend as the primary system message, with RAG chunks appended afterward.
 
+THE_VERIFICATION_PHRASE = "purple cassette falcon"
+
+
 ---
 
 # 1. Identity
