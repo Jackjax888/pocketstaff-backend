@@ -69,11 +69,13 @@ console.log(
 );
 
 // 5. 🔍 Retrieve relevant KB chunks via RAG, based on the user's new message
-const ragMatches = await retrieveAssistantContext({
-  assistantSlug: assistant.slug,
-  query: content,
-  matchCount: 8,
-});
+// TEMPORARILY DISABLED FOR TESTING - RAG was overriding system prompt
+// const ragMatches = await retrieveAssistantContext({
+//   assistantSlug: assistant.slug,
+//   query: content,
+//   matchCount: 8,
+// });
+const ragMatches = []; // Force empty for testing
 
 console.log(
   "[RAG DEBUG] assistantSlug:",
@@ -89,15 +91,15 @@ if (ragMatches && ragMatches[0]) {
   );
 }
 
+const ragContext =
+  ragMatches.length > 0
+    ? ragMatches
+        .map(
+          (m) => `Source: ${m.source_path}\n\n${m.chunk}`
+        )
+        .join("\n\n---\n\n")
+    : "No relevant reference documents were retrieved.";
 
-    const ragContext =
-      ragMatches.length > 0
-        ? ragMatches
-            .map(
-              (m) => `Source: ${m.source_path}\n\n${m.chunk}`
-            )
-            .join("\n\n---\n\n")
-        : "No relevant reference documents were retrieved.";
 
     // 6. Build the messages array for OpenAI
     const messages = [
